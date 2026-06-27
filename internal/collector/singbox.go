@@ -228,7 +228,7 @@ func (sb *SingBox) clashGet(ctx context.Context, path string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck // best-effort cleanup
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("clash API %s returned %d", path, resp.StatusCode)

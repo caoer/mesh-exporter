@@ -175,7 +175,7 @@ func TestSingBox_ClashGetHTTPError(t *testing.T) {
 
 func TestSingBox_ClashGetMalformedJSON(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`{not json`))
+		_, _ = w.Write([]byte(`{not json`))
 	}))
 	defer srv.Close()
 
@@ -208,7 +208,7 @@ func TestSingBox_ClashSecret(t *testing.T) {
 	var gotAuth string
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		gotAuth = r.Header.Get("Authorization")
-		w.Write([]byte(`{"connections":[]}`))
+		_, _ = w.Write([]byte(`{"connections":[]}`))
 	}))
 	defer srv.Close()
 

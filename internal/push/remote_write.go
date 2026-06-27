@@ -169,7 +169,7 @@ func (p *PushClient) post(ctx context.Context, body []byte) error {
 	if err != nil {
 		return fmt.Errorf("http post: %w", err)
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck // best-effort cleanup
 	_, _ = io.Copy(io.Discard, resp.Body) // drain to reuse connection
 
 	if resp.StatusCode/100 != 2 {
