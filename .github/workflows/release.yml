@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Build all targets
+        run: |
+          for pair in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64; do
+            GOOS=${pair%/*} GOARCH=${pair#*/} CGO_ENABLED=0 \
+              go build -ldflags="-s -w -X main.version=${GITHUB_REF_NAME}" \
+              -o "dist/mesh-exporter-${pair%/*}-${pair#*/}" ./cmd/mesh-exporter
+          done
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

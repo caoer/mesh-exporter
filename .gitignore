@@ -1,0 +1,21 @@
+# Build output (binary at repo root)
+/mesh-exporter
+dist/
+result
+
+# Go
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Nix
+result
+result-*
