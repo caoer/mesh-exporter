@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log/slog"
@@ -8,9 +9,11 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/caoer/mesh-exporter/internal/collector"
 	"github.com/caoer/mesh-exporter/internal/config"
+	"github.com/caoer/mesh-exporter/internal/push"
 	"github.com/caoer/mesh-exporter/internal/server"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -52,6 +55,17 @@ func main() {
 		slog.Info("collector started", "name", c.Name())
 	}
 
+	var pushClient *push.PushClient
+	if cfg.Push.Enabled {
+		pc, err := push.NewPushClient(reg, cfg.Push, logger)
+		if err != nil {
+			slog.Error("failed to create push client", "error", err)
+			os.Exit(1)
+		}
+		pc.Start()
+		pushClient = pc
+	}
+
 	srv := server.New(cfg.Listen, reg)
 
 	go func() {
@@ -67,6 +81,14 @@ func main() {
 	<-sig
 
 	slog.Info("shutting down")
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer shutdownCancel()
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		slog.Error("server shutdown error", "error", err)
+	}
+	if pushClient != nil {
+		pushClient.Stop()
+	}
 	for _, c := range collectors {
 		c.Stop()
 	}

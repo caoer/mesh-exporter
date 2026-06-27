@@ -23,20 +23,16 @@ type SingBox struct {
 	wg     sync.WaitGroup
 	client *http.Client
 
-	// Traffic
-	uplinkTotal   prometheus.Counter
-	downlinkTotal prometheus.Counter
+	// Traffic (cumulative totals from external source — use Gauge, not Counter)
+	uplinkTotal   prometheus.Gauge
+	downlinkTotal prometheus.Gauge
 
 	// Connections
-	connectionsIn  prometheus.Gauge
-	connectionsOut prometheus.Gauge
+	connectionsIn prometheus.Gauge
 
 	// Outbound health
 	outboundDelay *prometheus.GaugeVec
 	outboundAlive *prometheus.GaugeVec
-
-	// Process
-	memoryBytes prometheus.Gauge
 }
 
 // clashProxiesResponse matches GET /proxies from Clash API.
@@ -78,21 +74,17 @@ func NewSingBox(cfg config.SingBoxConfig, reg *prometheus.Registry, logger *slog
 		logger: logger.With("collector", "singbox"),
 		client: &http.Client{Timeout: 5 * time.Second},
 
-		uplinkTotal: prometheus.NewCounter(prometheus.CounterOpts{
+		uplinkTotal: prometheus.NewGauge(prometheus.GaugeOpts{
 			Name: "singbox_uplink_bytes_total",
-			Help: "Cumulative uplink bytes",
+			Help: "Cumulative uplink bytes (from Clash API)",
 		}),
-		downlinkTotal: prometheus.NewCounter(prometheus.CounterOpts{
+		downlinkTotal: prometheus.NewGauge(prometheus.GaugeOpts{
 			Name: "singbox_downlink_bytes_total",
-			Help: "Cumulative downlink bytes",
+			Help: "Cumulative downlink bytes (from Clash API)",
 		}),
 		connectionsIn: prometheus.NewGauge(prometheus.GaugeOpts{
 			Name: "singbox_connections_in",
-			Help: "Active inbound connections (from /connections count)",
-		}),
-		connectionsOut: prometheus.NewGauge(prometheus.GaugeOpts{
-			Name: "singbox_connections_out",
-			Help: "Active outbound connections",
+			Help: "Active connections (from /connections count)",
 		}),
 		outboundDelay: prometheus.NewGaugeVec(prometheus.GaugeOpts{
 			Name: "singbox_outbound_delay_ms",
@@ -102,17 +94,12 @@ func NewSingBox(cfg config.SingBoxConfig, reg *prometheus.Registry, logger *slog
 			Name: "singbox_outbound_alive",
 			Help: "1 if outbound has responded to URL test, 0 otherwise",
 		}, []string{"outbound", "type"}),
-		memoryBytes: prometheus.NewGauge(prometheus.GaugeOpts{
-			Name: "singbox_memory_bytes",
-			Help: "Memory usage in bytes",
-		}),
 	}
 
 	reg.MustRegister(
 		sb.uplinkTotal, sb.downlinkTotal,
-		sb.connectionsIn, sb.connectionsOut,
+		sb.connectionsIn,
 		sb.outboundDelay, sb.outboundAlive,
-		sb.memoryBytes,
 	)
 
 	return sb, nil
@@ -185,10 +172,8 @@ func (sb *SingBox) collectClashConnections(ctx context.Context) {
 		return
 	}
 
-	// Counter: set to cumulative totals (prometheus counter only goes up)
-	sb.uplinkTotal.Add(0)   // ensure initialized
-	sb.downlinkTotal.Add(0) // ensure initialized
-	// We track the total as a gauge internally and let Prometheus rate() handle it
+	sb.uplinkTotal.Set(float64(resp.UploadTotal))
+	sb.downlinkTotal.Set(float64(resp.DownloadTotal))
 	sb.connectionsIn.Set(float64(len(resp.Connections)))
 }
 

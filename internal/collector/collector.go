@@ -26,6 +26,10 @@ func BuildFromConfig(cfg *config.Config, reg *prometheus.Registry, logger *slog.
 		if err != nil {
 			return nil, err
 		}
+		instances := cfg.Collectors.EasyTier.ResolvedInstances()
+		logger.Info("easytier collector configured",
+			"instances", len(instances),
+			"native_stats", cfg.Collectors.EasyTier.NativeStats)
 		collectors = append(collectors, et)
 	}
 
