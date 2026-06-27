@@ -4,7 +4,6 @@ dist/
 result
 
 # Go
-vendor/
 
 # IDE
 .idea/
