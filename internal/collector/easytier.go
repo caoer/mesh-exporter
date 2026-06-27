@@ -45,7 +45,7 @@ type EasyTier struct {
 	nativeCollector *nativeStatsCollector
 }
 
-// peerEntry matches easytier-cli peer --output json structure.
+// peerEntry matches easytier-cli -o json peer list structure.
 // All fields are strings — the CLI formats numbers as human-readable text.
 type peerEntry struct {
 	CIDR       string `json:"cidr"`         // CIDR notation, e.g. "10.26.1.1/24"
@@ -62,7 +62,7 @@ type peerEntry struct {
 	Version    string `json:"version"`
 }
 
-// routeEntry matches easytier-cli route --output json structure.
+// routeEntry matches easytier-cli -o json route list structure.
 type routeEntry struct {
 	IPv4                    string `json:"ipv4"`         // CIDR notation
 	Hostname                string `json:"hostname"`
@@ -221,10 +221,12 @@ func (et *EasyTier) collectInstance(ctx context.Context, inst config.EasyTierIns
 }
 
 func (et *EasyTier) collectPeers(ctx context.Context, inst config.EasyTierInstance) {
-	args := []string{"peer", "--output", "json"}
+	// Global flags (-p, -o) must precede the subcommand in easytier-cli v2.x.
+	var args []string
 	if inst.RPCAddress != "" {
 		args = append(args, "-p", inst.RPCAddress)
 	}
+	args = append(args, "-o", "json", "peer", "list")
 
 	out, err := et.runCLI(ctx, inst.CLIPath, args...)
 	if err != nil {
@@ -312,10 +314,11 @@ func isPeerP2P(p peerEntry) bool {
 }
 
 func (et *EasyTier) collectRoutes(ctx context.Context, inst config.EasyTierInstance) {
-	args := []string{"route", "--output", "json"}
+	var args []string
 	if inst.RPCAddress != "" {
 		args = append(args, "-p", inst.RPCAddress)
 	}
+	args = append(args, "-o", "json", "route", "list")
 
 	out, err := et.runCLI(ctx, inst.CLIPath, args...)
 	if err != nil {
@@ -374,10 +377,11 @@ func (et *EasyTier) runCLI(ctx context.Context, cliPath string, args ...string) 
 
 // collectNativeStatsForInstance fetches and caches native prometheus stats.
 func (et *EasyTier) collectNativeStatsForInstance(ctx context.Context, inst config.EasyTierInstance) {
-	args := []string{"stats", "prometheus"}
+	var args []string
 	if inst.RPCAddress != "" {
 		args = append(args, "-p", inst.RPCAddress)
 	}
+	args = append(args, "stats", "prometheus")
 
 	out, err := et.runCLI(ctx, inst.CLIPath, args...)
 	if err != nil {
