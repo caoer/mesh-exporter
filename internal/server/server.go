@@ -15,10 +15,10 @@ func New(addr string, reg *prometheus.Registry) *http.Server {
 	}))
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok\n"))
+		_, _ = w.Write([]byte("ok\n"))
 	})
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`<html><body><h1>mesh-exporter</h1><p><a href="/metrics">Metrics</a></p></body></html>`))
+		_, _ = w.Write([]byte(`<html><body><h1>mesh-exporter</h1><p><a href="/metrics">Metrics</a></p></body></html>`))
 	})
 
 	return &http.Server{

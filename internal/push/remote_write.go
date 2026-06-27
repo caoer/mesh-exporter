@@ -170,7 +170,7 @@ func (p *PushClient) post(ctx context.Context, body []byte) error {
 		return fmt.Errorf("http post: %w", err)
 	}
 	defer resp.Body.Close()
-	io.Copy(io.Discard, resp.Body) // drain to reuse connection
+	_, _ = io.Copy(io.Discard, resp.Body) // drain to reuse connection
 
 	if resp.StatusCode/100 != 2 {
 		return fmt.Errorf("unexpected status %d", resp.StatusCode)
