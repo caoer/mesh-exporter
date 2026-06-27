@@ -1,52 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_VICTORIAMETRICS",
-      "label": "VictoriaMetrics",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "10.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -74,7 +26,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "Total number of mesh peers across selected networks",
       "fieldConfig": {
         "defaults": {
@@ -104,7 +56,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "sum(easytier_peers_total{network=~\"$network\", instance=~\"$instance\"})",
           "instant": true,
           "legendFormat": "",
@@ -115,7 +67,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "Percentage of peers connected via P2P (not relay)",
       "fieldConfig": {
         "defaults": {
@@ -150,7 +102,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "sum(easytier_peers_p2p{network=~\"$network\", instance=~\"$instance\"}) / sum(easytier_peers_total{network=~\"$network\", instance=~\"$instance\"}) * 100",
           "instant": true,
           "legendFormat": "",
@@ -161,7 +113,7 @@
       "type": "gauge"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "Number of peers connected via relay (non-P2P). Red if any peers are relayed.",
       "fieldConfig": {
         "defaults": {
@@ -192,7 +144,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "sum(easytier_peers_relay{network=~\"$network\", instance=~\"$instance\"})",
           "instant": true,
           "legendFormat": "",
@@ -203,7 +155,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "Total active sing-box connections (inbound + outbound)",
       "fieldConfig": {
         "defaults": {
@@ -233,7 +185,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "sum(singbox_connections_in{instance=~\"$instance\"}) + sum(singbox_connections_out{instance=~\"$instance\"})",
           "instant": true,
           "legendFormat": "",
@@ -251,7 +203,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "All mesh peers with connection details",
       "fieldConfig": {
         "defaults": {
@@ -343,7 +295,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_peer_latency_ms{network=~\"$network\", instance=~\"$instance\"}",
           "format": "table",
           "instant": true,
@@ -351,7 +303,7 @@
           "refId": "A"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_peer_p2p{network=~\"$network\", instance=~\"$instance\"}",
           "format": "table",
           "instant": true,
@@ -359,7 +311,7 @@
           "refId": "B"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_peer_loss_rate{network=~\"$network\", instance=~\"$instance\"}",
           "format": "table",
           "instant": true,
@@ -367,7 +319,7 @@
           "refId": "C"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_peer_rx_bytes_total{network=~\"$network\", instance=~\"$instance\"}",
           "format": "table",
           "instant": true,
@@ -375,7 +327,7 @@
           "refId": "D"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_peer_tx_bytes_total{network=~\"$network\", instance=~\"$instance\"}",
           "format": "table",
           "instant": true,
@@ -426,7 +378,7 @@
       "type": "table"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "Number of peers connected via relay instead of P2P. Red indicates suboptimal routing.",
       "fieldConfig": {
         "defaults": {
@@ -457,7 +409,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "count(easytier_peer_p2p{network=~\"$network\", instance=~\"$instance\"} == 0)",
           "instant": true,
           "legendFormat": "",
@@ -475,7 +427,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "RTT latency to each peer over time",
       "fieldConfig": {
         "defaults": {
@@ -521,7 +473,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_peer_latency_ms{network=~\"$network\", instance=~\"$instance\"}",
           "legendFormat": "{{peer}} ({{hostname}})",
           "refId": "A"
@@ -531,7 +483,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "Packet loss rate per peer over time",
       "fieldConfig": {
         "defaults": {
@@ -577,7 +529,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_peer_loss_rate{network=~\"$network\", instance=~\"$instance\"}",
           "legendFormat": "{{peer}} ({{hostname}})",
           "refId": "A"
@@ -587,7 +539,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "Per-peer RX/TX traffic rates",
       "fieldConfig": {
         "defaults": {
@@ -638,13 +590,13 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "rate(easytier_peer_rx_bytes_total{network=~\"$network\", instance=~\"$instance\"}[5m])",
           "legendFormat": "RX {{peer}} ({{hostname}})",
           "refId": "A"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "rate(easytier_peer_tx_bytes_total{network=~\"$network\", instance=~\"$instance\"}[5m])",
           "legendFormat": "TX {{peer}} ({{hostname}})",
           "refId": "B"
@@ -661,7 +613,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "Hop count to each destination in the mesh",
       "fieldConfig": {
         "defaults": {
@@ -701,7 +653,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_route_path_length{network=~\"$network\", instance=~\"$instance\"}",
           "format": "table",
           "instant": true,
@@ -732,7 +684,7 @@
       "type": "table"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
       "description": "End-to-end path latency to each destination over time",
       "fieldConfig": {
         "defaults": {
@@ -776,7 +728,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "expr": "easytier_route_path_latency_ms{network=~\"$network\", instance=~\"$instance\"}",
           "legendFormat": "{{destination}} ({{hostname}})",
           "refId": "A"
@@ -793,7 +745,7 @@
       "type": "row",
       "panels": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "description": "Health status and delay for each sing-box outbound",
           "fieldConfig": {
             "defaults": {
@@ -855,7 +807,7 @@
           },
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+              "datasource": { "type": "prometheus", "uid": "victoriametrics" },
               "expr": "singbox_outbound_alive{instance=~\"$instance\"}",
               "format": "table",
               "instant": true,
@@ -863,7 +815,7 @@
               "refId": "A"
             },
             {
-              "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+              "datasource": { "type": "prometheus", "uid": "victoriametrics" },
               "expr": "singbox_outbound_delay_ms{instance=~\"$instance\"}",
               "format": "table",
               "instant": true,
@@ -898,7 +850,7 @@
           "type": "table"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "description": "sing-box uplink and downlink traffic rates",
           "fieldConfig": {
             "defaults": {
@@ -949,13 +901,13 @@
           },
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+              "datasource": { "type": "prometheus", "uid": "victoriametrics" },
               "expr": "rate(singbox_uplink_bytes_total{instance=~\"$instance\"}[5m])",
               "legendFormat": "Uplink {{instance}}",
               "refId": "A"
             },
             {
-              "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+              "datasource": { "type": "prometheus", "uid": "victoriametrics" },
               "expr": "rate(singbox_downlink_bytes_total{instance=~\"$instance\"}[5m])",
               "legendFormat": "Downlink {{instance}}",
               "refId": "B"
@@ -965,7 +917,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
           "description": "sing-box process memory usage",
           "fieldConfig": {
             "defaults": {
@@ -1009,7 +961,7 @@
           },
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+              "datasource": { "type": "prometheus", "uid": "victoriametrics" },
               "expr": "singbox_memory_bytes{instance=~\"$instance\"}",
               "legendFormat": "{{instance}}",
               "refId": "A"
@@ -1027,7 +979,7 @@
     "list": [
       {
         "current": {},
-        "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+        "datasource": { "type": "prometheus", "uid": "victoriametrics" },
         "definition": "label_values(easytier_peers_total, network)",
         "includeAll": true,
         "multi": true,
@@ -1046,7 +998,7 @@
       },
       {
         "current": {},
-        "datasource": { "type": "prometheus", "uid": "${DS_VICTORIAMETRICS}" },
+        "datasource": { "type": "prometheus", "uid": "victoriametrics" },
         "definition": "label_values(easytier_peers_total, instance)",
         "includeAll": true,
         "multi": true,
